@@ -100,8 +100,8 @@ function processmodel(pm)
     if includeSimulinkWebViewTask
         slwebTask = pm.addTask(padv.builtin.task.GenerateSimulinkWebView(IterationQuery=findModels));
         % slwebTask.ReportPath = fullfile('$PROJECTROOT$', '..', '..', '04_Results', '$ITERATIONARTIFACT$', 'web');
-        % slwebTask.ReportPath = fullfile('$PROJECTROOT$/../../../level1-b', '04_Results', '$ITERATIONARTIFACT$', 'web');
-        slwebTask.ReportPath = fullfile('C:\Data\temp\repoRoot_v1/level1-b', '04_Results', '$ITERATIONARTIFACT$', 'web');
+        slwebTask.ReportPath = fullfile('$PROJECTROOT$/../../../level1-b', '04_Results', '$ITERATIONARTIFACT$', 'web');
+        % slwebTask.ReportPath = fullfile('C:\Data\temp\repoRoot_v1/level1-b', '04_Results', '$ITERATIONARTIFACT$', 'web');
     end
 
     %% Run tests per test case
