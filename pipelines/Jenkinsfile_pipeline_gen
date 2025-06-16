@@ -43,7 +43,7 @@ node("padv_win_agents"){
 
     stage('Pipeline Generation'){
         cleanWs();def scmVars=checkout scm;env.PADV_GIT_COMMIT=scmVars.GIT_COMMIT;
-        docker.image("$IMAGE_TAG").inside("$IMAGE_ARGS") {
+        // docker.image("$IMAGE_TAG").inside("$IMAGE_ARGS") {
             def command = "cp -r $SUPPORT_PACKAGE_ROOT/toolbox/padv/pipeline_generator/ci/templates/jenkins/activity.groovy $WORKSPACE";
             if ("$IS_UNIX" == "true"){ sh(command) } else { bat(command)}
             def activity = load "$WORKSPACE/activity.groovy";
@@ -52,7 +52,7 @@ node("padv_win_agents"){
             stash(includes:"$BUILD_FOLDER/**", name:'build_files')
             archiveArtifacts artifacts: "$BUILD_FOLDER/**", allowEmptyArchive: true
             activity.loadEnvVariables()
-        }
+        // }
     }
     load "$WORKSPACE/$BUILD_FOLDER/simulink_pipeline";
 }
