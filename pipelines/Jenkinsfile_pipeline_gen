@@ -1,0 +1,58 @@
+node("padv_linux_agents"){
+    env.PYTHON_ALIAS = 'python3';
+    env.SUPPORT_PACKAGE_ROOT = 'C:/Data/nrepos/bslcicd/matlab';
+    // env.SUPPORT_PACKAGE_ROOT = '/mathworks/devel/sbs/70/ahmedh.BR2024bd.j2959559.117/matlab';
+    env.MATLAB_INSTALLATION_PATH = 'C:/Program Files/MATLAB/R2024b/bin';
+    // env.MATLAB_INSTALLATION_PATH = '/mathworks/devel/sbs/70/ahmedh.BR2024bd.j2959559.117/matlab/bin';
+
+    // env.SUPPORT_PACKAGE_ROOT = '/home/matlab/Documents/MATLAB/SupportPackages/R2024b';
+    // env.MATLAB_INSTALLATION_PATH = 'matlab_installation_path';
+    
+    // env.RUNNER_LABEL = 'padv_linux_agents';
+    env.RUNNER_LABEL = 'padv_win_agents';
+    env.ARTIFACT_SERVICE_MODE = 'azure_blob';         // network/jfrog/s3/azure_blob
+    // env.NETWORK_STORAGE_PATH = 'C:/Data/artifactory';
+    // env.NETWORK_STORAGE_PATH = '/mathworks/home/ahmedh/runners/artifacts';
+    // env.ARTIFACTORY_URL = 'http://mathworks-v4rgb:8082/artifactory';
+    // env.ARTIFACTORY_REPO_NAME = 'padv-bslcicd';
+    // You need to set jfrog api token in Jenkins credentials with 'api_token_cred' id;
+    // withCredentials([string( credentialsId: 'ARTIFACTORY_API_TOKEN_SECRET',variable: 'artifactory_api_token')]) {
+    //     env.ARTIFACTORY_API_TOKEN = artifactory_api_token;
+    // }
+    env.S3_BUCKET_NAME = 'padv-bslcicd';
+    env.S3_AWS_ACCESS_KEY_ID = 'AKIA3GOQ46RW26ARMMHY';
+    // For S3 storage services, you need to set AWS s3 access key in Jenkins credentials with 'S3_AWS_SECRET_ACCESS_KEY_SECRET' id; you should never hardcode secrets or token in the jenkins file.
+    withCredentials([string( credentialsId: 'S3_AWS_SECRET_ACCESS_KEY_SECRET',variable: 's3_access_key')]) {
+        env.S3_AWS_SECRET_ACCESS_KEY = s3_access_key;
+    }
+    env.AZ_CONTAINER_NAME = 'padvblobcontainer';
+    // For Azure blob storage services, you need to set Azure storage account connectionstring in Jenkins credentials with 'AZ_CONNECTION_STRING_SECRET' id; you should never hardcode secrets or token in the jenkins file.
+    withCredentials([string( credentialsId: 'AZ_CONNECTION_STRING_SECRET',variable: 'az_connection_string')]) {
+        env.AZ_CONNECTION_STRING = az_connection_string;
+    }
+    // env.RUNNER_TYPE = "container";        // default/container
+    // env.IMAGE_TAG = "slcicd.azurecr.io/slcheck/padv:R2024b_j2959559_73v9t";
+    withCredentials([string( credentialsId: 'MLM_LICENSE_TOKEN_SECRET',variable: 'mlm_license_token')]) {
+        env.MLM_LICENSE_TOKEN = mlm_license_token;
+    }
+    // env.IMAGE_ARGS = "-u 40000:40000";
+    env.BUILD_FOLDER_NAME = "_build_";
+    env.IS_UNIX = isUnix();
+    env.PROJECT_RELATIVE_PATH = "level1-a\\level2\\ProcessAdvisorProjectReferenceExample";
+    env.BUILD_FOLDER = env.PROJECT_RELATIVE_PATH ? "${env.PROJECT_RELATIVE_PATH}/${env.BUILD_FOLDER_NAME}" : env.BUILD_FOLDER_NAME;
+
+    stage('Pipeline Generation'){
+        cleanWs();def scmVars=checkout scm;env.PADV_GIT_COMMIT=scmVars.GIT_COMMIT;
+        docker.image("$IMAGE_TAG").inside("$IMAGE_ARGS") {
+            def command = "cp -r $SUPPORT_PACKAGE_ROOT/toolbox/padv/pipeline_generator/ci/templates/jenkins/activity.groovy $WORKSPACE";
+            if ("$IS_UNIX" == "true"){ sh(command) } else { bat(command)}
+            def activity = load "$WORKSPACE/activity.groovy";
+            // runMATLABCommand "addpath('$WORKSPACE/pipelines');generate_jenkins_pipeline('$WORKSPACE','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
+            activity.runShellCommand("matlab-batch \"addpath('$WORKSPACE/pipelines');generate_jenkins_pipeline('$WORKSPACE/$PROJECT_RELATIVE_PATH','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');\"")
+            stash(includes:"$BUILD_FOLDER/**", name:'build_files')
+            archiveArtifacts artifacts: "$BUILD_FOLDER/**", allowEmptyArchive: true
+            activity.loadEnvVariables()
+        }
+    }
+    load "$WORKSPACE/$BUILD_FOLDER/simulink_pipeline";
+}
