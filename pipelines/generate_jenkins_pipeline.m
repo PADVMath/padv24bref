@@ -8,7 +8,7 @@ function generate_jenkins_pipeline(workspace, projectToRepoPath, matlabInstallat
         agentLabel = "jenkins_agent_label";
         build_folder = "_build_"
     end
-    cp = openProject(strjoin([workspace,projectToRepoPath] , filesep));
+    cp = openProject(strjoin({workspace,projectToRepoPath} , filesep));
     op = padv.pipeline.JenkinsOptions;
     % op.PipelineArchitecture = "IndependentModelPipelines"; # SingleStage, SerialStages, SerialStagesGroupPerTask
     op.PipelineArchitecture = "IndependentModelPipelines";
