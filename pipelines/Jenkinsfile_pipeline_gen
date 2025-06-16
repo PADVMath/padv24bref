@@ -48,7 +48,7 @@ node("padv_win_agents"){
             if ("$IS_UNIX" == "true"){ sh(command) } else { bat(command)}
             def activity = load "$WORKSPACE/activity.groovy";
             // runMATLABCommand "addpath('$WORKSPACE/pipelines');generate_jenkins_pipeline('$WORKSPACE','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
-            activity.runShellCommand("matlab-batch \"addpath('$WORKSPACE/pipelines');generate_jenkins_pipeline('$WORKSPACE/$PROJECT_RELATIVE_PATH','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');\"")
+            activity.runShellCommand("matlab-batch \"addpath('$WORKSPACE/pipelines');generate_jenkins_pipeline('$WORKSPACE','$PROJECT_RELATIVE_PATH','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');\"")
             stash(includes:"$BUILD_FOLDER/**", name:'build_files')
             archiveArtifacts artifacts: "$BUILD_FOLDER/**", allowEmptyArchive: true
             activity.loadEnvVariables()
