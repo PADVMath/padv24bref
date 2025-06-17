@@ -10,24 +10,24 @@ function processmodel(pm)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
     includeModelMaintainabilityMetricTask = true;
-    includeModelTestingMetricTask = true;
-    includeModelStandardsTask = true;
+    includeModelTestingMetricTask = false;
+    includeModelStandardsTask = false;
     includeDesignErrorDetectionTask = false;        % Disabled
-    includeFindClones = true;
-    includeModelComparisonTask = true;
+    includeFindClones = false;
+    includeModelComparisonTask = false;
     includeSDDTask = false;                         % Disabled
     includeSimulinkWebViewTask = true;
-    includeTestsPerTestCaseTask = true;
-    includeMergeTestResultsTask = true;
-    includeRefGenerateCodeTask = true;
-    includeTopGenerateCodeTask = true; % Project Level Top-Model code generation
+    includeTestsPerTestCaseTask = false;
+    includeMergeTestResultsTask = false;
+    includeRefGenerateCodeTask = false;
+    includeTopGenerateCodeTask = false; % Project Level Top-Model code generation
     % Not supported in mpm / docker images
-    includeRefAnalyzeModelCode = true && ~padv.internal.util.isMACA64 && exist('polyspaceroot','file');
-    includeTopAnalyzeModelCode = true && ~padv.internal.util.isMACA64 && exist('polyspaceroot','file'); % Project Level Top-Model code analysis
-    includeRefProveCodeQuality = true && ~padv.internal.util.isMACA64 && (~isempty(ver('pscodeprover')) || ~isempty(ver('pscodeproverserver')));
-    includeTopProveCodeQuality = true && ~padv.internal.util.isMACA64 && (~isempty(ver('pscodeprover')) || ~isempty(ver('pscodeproverserver')));% Project Level Top-Model code proving
-    includeRefCodeInspection = true;
-    includeTopCodeInspection = true;
+    includeRefAnalyzeModelCode = false && ~padv.internal.util.isMACA64 && exist('polyspaceroot','file');
+    includeTopAnalyzeModelCode = false && ~padv.internal.util.isMACA64 && exist('polyspaceroot','file'); % Project Level Top-Model code analysis
+    includeRefProveCodeQuality = false && ~padv.internal.util.isMACA64 && (~isempty(ver('pscodeprover')) || ~isempty(ver('pscodeproverserver')));
+    includeTopProveCodeQuality = false && ~padv.internal.util.isMACA64 && (~isempty(ver('pscodeprover')) || ~isempty(ver('pscodeproverserver')));% Project Level Top-Model code proving
+    includeRefCodeInspection = false;
+    includeTopCodeInspection = false;
     includeGenerateRequirementsReport = true;
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
