@@ -3,4 +3,7 @@
     <Category UUID="FileClassCategory">
         <Label UUID="design"/>
     </Category>
+    <Category UUID="d72806e9-f16e-415f-a8d3-7286e2faee47">
+        <Label UUID="fc2451b8-3a2d-406a-93b8-74efd2b773f0"/>
+    </Category>
 </Info>
