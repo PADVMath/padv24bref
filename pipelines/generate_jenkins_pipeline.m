@@ -18,7 +18,7 @@ function generate_jenkins_pipeline(workspace, projectToRepoPath, matlabInstallat
     op.GeneratedPipelineDirectory = build_folder;
     op.StopOnStageFailure = true;
     op.RunprocessCommandOptions.GenerateJUnitForProcess = true;
-    op.ReportPath = "$PROJECTROOT$/PA_Results/Report/ProcessAdvisorReport";
+    op.ReportPath = "$PROJECTROOT$/PA_Results/Report/PadvReport";
     op.ProjectToRepoPath = projectToRepoPath;
 
     % Docker image settings
