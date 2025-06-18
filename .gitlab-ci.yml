@@ -35,7 +35,7 @@ variables:
   # IMAGE_TAG: padv:R2024b_j2959559_73v2
   # SUBMODULES_MODE: true
   MLM_LICENSE_TOKEN: "$MLM_LICENSE_TOKEN_SECRET"
-  # PROJECT_RELATIVE_PATH: "level1-a/level2/ProcessAdvisorProjectReferenceExample"
+  PROJECT_RELATIVE_PATH: "level1-a/level2/ProcessAdvisorProjectReferenceExample"
 SimulinkPipelineGeneration:
   stage: SimulinkPipelineGeneration
   image: 
@@ -55,7 +55,7 @@ SimulinkPipelineGeneration:
     # - xvfb-run matlab-batch "addpath('$CI_PROJECT_DIR');generate_gitlab_pipeline('$CI_PROJECT_DIR','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
     - call "$PYTHON_ALIAS" "$CI_UTIL/py/prepare.py" --pipeline_prepare --platform gitlab
   artifacts:
-    paths: ["$PROJECT_RELATIVE_PATH/$BUILD_FOLDER_NAME/"]
+    paths: ["$PROJECT_RELATIVE_PATHx/$BUILD_FOLDER_NAME/"]
 
 SimulinkPipelineExecution:
   stage: SimulinkPipelineExecution
