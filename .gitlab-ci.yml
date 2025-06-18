@@ -1,0 +1,69 @@
+workflow:
+  name: GitLab MATLAB Pipeline
+
+stages:
+    - SimulinkPipelineGeneration
+    - SimulinkPipelineExecution
+
+variables:
+  PYTHON_ALIAS: python3
+  # SUPPORT_PACKAGE_ROOT: "D:/sb/r24b_0402/matlab"
+  SUPPORT_PACKAGE_ROOT: "C:/Data/nrepos/bslcicd/matlab"
+  # SUPPORT_PACKAGE_ROOT: "/mathworks/devel/sbs/70/ahmedh.BR2024bd.j2959559.73/matlab"
+  # SUPPORT_PACKAGE_ROOT: "/home/matlab/Documents/MATLAB/SupportPackages/R2024b"
+  # MATLAB_INSTALLATION_PATH: "D:/sb/r24b_0402/matlab/bin"  # Path to MATLAB installation directory
+  MATLAB_INSTALLATION_PATH: "C:/Program Files/MATLAB/R2024b/bin"  # Path to MATLAB installation directory
+  # MATLAB_INSTALLATION_PATH: "/mathworks/devel/sbs/70/ahmedh.BR2024bd.j2959559.73/matlab/bin"
+  # MATLAB_INSTALLATION_PATH: "/matlab_bin_path"
+  ARTIFACT_SERVICE_MODE: azure_blob         # jfrog/network/s3/azure_blob
+  # NETWORK_STORAGE_PATH: C:/Data/artifactory
+  # ARTIFACTORY_URL: http://mathworks-v4rgb:8082/artifactory
+  # ARTIFACTORY_REPO_NAME: padv-bslcicd
+  # For JFrog Artifactory, You need to set jfrog api token in Azure Devops variables with 'ARTIFACTORY_API_TOKEN_SECRET' id; you should never hardcode secrets or token in the YAML file.
+  # ARTIFACTORY_API_TOKEN: "$ARTIFACTORY_API_TOKEN_SECRET"
+  # S3_BUCKET_NAME: padv-bslcicd
+  # S3_AWS_ACCESS_KEY_ID: AKIA3GOQ46RW26ARMMHY
+  # For S3 storage, you need to set AWS s3 access key in Azure Devops variables with 'S3_AWS_SECRET_ACCESS_KEY_SECRET' id; you should never hardcode secrets or token in the YAML file.
+  # S3_AWS_SECRET_ACCESS_KEY: "$S3_AWS_SECRET_ACCESS_KEY_SECRET"
+  AZ_CONTAINER_NAME: padvblobcontainer
+  # For Azure blob storage, you need to set Azure storage account connectionstring in Azure Devops variables with 'AZ_CONNECTION_STRING_SECRET' id; you should never hardcode secrets or token in the YAML file.
+  AZ_CONNECTION_STRING: "$AZ_CONNECTION_STRING_SECRET"
+  # RUNNER_LABEL: padv_win_runner
+  RUNNER_LABEL: padv_win_agents
+  BUILD_FOLDER: _build_
+  PROJECT_NAME: "${CI_PIPELINE_NAME}"
+  # IMAGE_TAG: padv:R2024b_j2959559_73v2
+  # SUBMODULES_MODE: true
+  MLM_LICENSE_TOKEN: "$MLM_LICENSE_TOKEN_SECRET"
+SimulinkPipelineGeneration:
+  stage: SimulinkPipelineGeneration
+  # image: 
+    # name: "$IMAGE_TAG"
+  variables:
+    WORKSPACE_PATH_KEY: CI_PROJECT_DIR
+    CI_UTIL: "${SUPPORT_PACKAGE_ROOT}/toolbox/padv/pipeline_generator/ci"
+    GIT_DEPTH: 0
+    # GIT_SUBMODULE_STRATEGY: recursive
+  tags: ["$RUNNER_LABEL"]
+  script:
+    - cp -r "$CI_UTIL/templates/gitlab/$BUILD_FOLDER" ./ 
+    - cp -r "$CI_UTIL/scripts" ./_scripts_ && cd _scripts_
+    - .\SET_PATH "$MATLAB_INSTALLATION_PATH" "$CI_PROJECT_DIR/_scripts_" 2>$RUNNER_TEMP_PROJECT_DIR\_error_ || source ./SET_PATH "$MATLAB_INSTALLATION_PATH" "$CI_PROJECT_DIR/_scripts_"
+    - xvfb-run -a matlab -batch "addpath('$CI_PROJECT_DIR');generate_gitlab_pipeline('$CI_PROJECT_DIR','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER');"
+    # - xvfb-run matlab-batch "addpath('$CI_PROJECT_DIR');generate_gitlab_pipeline('$CI_PROJECT_DIR','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER');"
+    - call "$PYTHON_ALIAS" "$CI_UTIL/py/prepare.py" --pipeline_prepare --platform gitlab
+  artifacts:
+    paths: ["$BUILD_FOLDER/"]
+
+SimulinkPipelineExecution:
+  stage: SimulinkPipelineExecution
+  needs: [SimulinkPipelineGeneration]
+  trigger:
+    include:
+      - artifact: $BUILD_FOLDER/simulink_pipeline.yml
+        job: SimulinkPipelineGeneration
+    strategy: depend
+  # Do not change the name of these variables, they are used to identify the root pipeline ID in the downstream jobs.
+  variables:
+      PADV_ROOT_PIPELINE_ID: $CI_PIPELINE_ID
+      PADV_ROOT_PIPELINE_IID: $CI_PIPELINE_IID
