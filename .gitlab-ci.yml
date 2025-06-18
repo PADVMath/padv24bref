@@ -38,8 +38,8 @@ variables:
   PROJECT_RELATIVE_PATH: "level1-a/level2/ProcessAdvisorProjectReferenceExample"
 SimulinkPipelineGeneration:
   stage: SimulinkPipelineGeneration
-  # image: 
-    # name: "$IMAGE_TAG"
+  image: 
+    name: "$IMAGE_TAG"
   variables:
     WORKSPACE_PATH_KEY: CI_PROJECT_DIR
     CI_UTIL: "${SUPPORT_PACKAGE_ROOT}/toolbox/padv/pipeline_generator/ci"
