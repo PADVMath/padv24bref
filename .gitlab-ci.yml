@@ -47,7 +47,7 @@ SimulinkPipelineGeneration:
     # GIT_SUBMODULE_STRATEGY: recursive
   tags: ["$RUNNER_LABEL"]
   script:
-    - cp -r "$CI_UTIL/templates/gitlab/$BUILD_FOLDER" ./ 
+    - cp -r "$CI_UTIL/templates/gitlab/_build_" ./ 
     - cp -r "$CI_UTIL/scripts" ./_scripts_ && cd _scripts_
     - .\SET_PATH "$MATLAB_INSTALLATION_PATH" "$CI_PROJECT_DIR/_scripts_" 2>$RUNNER_TEMP_PROJECT_DIR\_error_ || source ./SET_PATH "$MATLAB_INSTALLATION_PATH" "$CI_PROJECT_DIR/_scripts_"
     - matlab-batch "addpath('$CI_PROJECT_DIR/pipelines');generate_gitlab_pipeline('$CI_PROJECT_DIR','$PROJECT_RELATIVE_PATH','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
@@ -62,7 +62,7 @@ SimulinkPipelineExecution:
   needs: [SimulinkPipelineGeneration]
   trigger:
     include:
-      - artifact: $BUILD_FOLDER/simulink_pipeline.yml
+      - artifact: $PROJECT_RELATIVE_PATH/$BUILD_FOLDER_NAME/simulink_pipeline.yml
         job: SimulinkPipelineGeneration
     strategy: depend
   # Do not change the name of these variables, they are used to identify the root pipeline ID in the downstream jobs.
