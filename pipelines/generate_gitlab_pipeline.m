@@ -1,11 +1,11 @@
 % Copyright 2025 The MathWorks, Inc.
 
-function generate_gitlab_pipeline(workspace, projectToRepoPath, matlabInstallationLocation, tags, build_folder)
+function generate_gitlab_pipeline(workspace, projectToRepoPath, matlabInstallationLocation, runnerTags, build_folder)
     arguments
         workspace = pwd;
         projectToRepoPath = "";
         matlabInstallationLocation = "matlab_bin_path";
-        tags = "gitlab_runner_tags";
+        runnerTags = "gitlab_runner_tag";
         build_folder = "_build_"
     end
     cp = openProject(strjoin({workspace,projectToRepoPath} , filesep));
@@ -14,7 +14,7 @@ function generate_gitlab_pipeline(workspace, projectToRepoPath, matlabInstallati
     op.PipelineArchitecture = "IndependentModelPipelines";
     op.GeneratorVersion = 2;
     op.MatlabInstallationLocation = matlabInstallationLocation;
-    op.Tags = tags;
+    op.Tags = runnerTags;
     op.GeneratedPipelineDirectory = build_folder;
     op.StopOnStageFailure = true;
     op.RunprocessCommandOptions.GenerateJUnitForProcess = true;
