@@ -50,7 +50,7 @@ SimulinkPipelineGeneration:
     - cp -r "$CI_UTIL/templates/gitlab/$BUILD_FOLDER" ./ 
     - cp -r "$CI_UTIL/scripts" ./_scripts_ && cd _scripts_
     - .\SET_PATH "$MATLAB_INSTALLATION_PATH" "$CI_PROJECT_DIR/_scripts_" 2>$RUNNER_TEMP_PROJECT_DIR\_error_ || source ./SET_PATH "$MATLAB_INSTALLATION_PATH" "$CI_PROJECT_DIR/_scripts_"
-    - matlab-batch "addpath('$CI_PROJECT_DIR');generate_gitlab_pipeline('$CI_PROJECT_DIR','$PROJECT_RELATIVE_PATH','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
+    - matlab-batch "addpath('$CI_PROJECT_DIR/pipelines');generate_gitlab_pipeline('$CI_PROJECT_DIR','$PROJECT_RELATIVE_PATH','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
     # - xvfb-run -a matlab -batch "addpath('$CI_PROJECT_DIR');generate_gitlab_pipeline('$CI_PROJECT_DIR','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
     # - xvfb-run matlab-batch "addpath('$CI_PROJECT_DIR');generate_gitlab_pipeline('$CI_PROJECT_DIR','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
     - call "$PYTHON_ALIAS" "$CI_UTIL/py/prepare.py" --pipeline_prepare --platform gitlab
