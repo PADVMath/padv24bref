@@ -36,6 +36,7 @@ variables:
   # SUBMODULES_MODE: true
   MLM_LICENSE_TOKEN: "$MLM_LICENSE_TOKEN_SECRET"
   PROJECT_RELATIVE_PATH: "level1-a/level2/ProcessAdvisorProjectReferenceExample"
+  PROJECT_RELATIVE_PATHx: "."
 SimulinkPipelineGeneration:
   stage: SimulinkPipelineGeneration
   image: 
