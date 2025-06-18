@@ -35,7 +35,7 @@ variables:
   # IMAGE_TAG: padv:R2024b_j2959559_73v2
   # SUBMODULES_MODE: true
   MLM_LICENSE_TOKEN: "$MLM_LICENSE_TOKEN_SECRET"
-  PROJECT_RELATIVE_PATH: "level1-a/level2/ProcessAdvisorProjectReferenceExample"
+  # PROJECT_RELATIVE_PATH: "level1-a/level2/ProcessAdvisorProjectReferenceExample"
 SimulinkPipelineGeneration:
   stage: SimulinkPipelineGeneration
   image: 
