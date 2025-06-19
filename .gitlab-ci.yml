@@ -47,7 +47,7 @@ SimulinkPipelineGeneration:
     # GIT_SUBMODULE_STRATEGY: recursive
   tags: ["$RUNNER_LABEL"]
   script:
-    - cp -r "$CI_UTIL/templates/gitlab/_build_" ./ 
+    - cp -r "$CI_UTIL/templates/gitlab/_build_" "$PROJECT_RELATIVE_PATH/$BUILD_FOLDER_NAME"
     - cp -r "$CI_UTIL/scripts" ./_scripts_ && cd _scripts_
     - .\SET_PATH "$MATLAB_INSTALLATION_PATH" "$CI_PROJECT_DIR/_scripts_" 2>$RUNNER_TEMP_PROJECT_DIR\_error_ || source ./SET_PATH "$MATLAB_INSTALLATION_PATH" "$CI_PROJECT_DIR/_scripts_"
     - matlab-batch "addpath('$CI_PROJECT_DIR/pipelines');generate_gitlab_pipeline('$CI_PROJECT_DIR','$PROJECT_RELATIVE_PATH','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
