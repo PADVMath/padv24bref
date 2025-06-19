@@ -29,7 +29,7 @@ variables:
   # For Azure blob storage, you need to set Azure storage account connectionstring in Azure Devops variables with 'AZ_CONNECTION_STRING_SECRET' id; you should never hardcode secrets or token in the YAML file.
   AZ_CONNECTION_STRING: "$AZ_CONNECTION_STRING_SECRET"
   # RUNNER_LABEL: padv_win_runner
-  RUNNER_LABEL: padv_win_agents
+  RUNNER_LABEL: padv_linux_agents
   BUILD_FOLDER_NAME: _build_
   PROJECT_NAME: "${CI_PIPELINE_NAME}"
   # IMAGE_TAG: padv:R2024b_j2959559_73v2
