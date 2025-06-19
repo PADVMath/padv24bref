@@ -34,7 +34,6 @@ variables:
   PROJECT_NAME: "${CI_PIPELINE_NAME}"
   # IMAGE_TAG: padv:R2024b_j2959559_73v2
   IMAGE_TAG: package-non-interactive:r2024b_apr
-  IMAGE_ENTRYPOINT: ""
   # SUBMODULES_MODE: true
   MLM_LICENSE_TOKEN: "$MLM_LICENSE_TOKEN_SECRET"
   PROJECT_RELATIVE_PATH: "level1-a/level2/ProcessAdvisorProjectReferenceExample"      # or "."
@@ -42,7 +41,6 @@ SimulinkPipelineGeneration:
   stage: SimulinkPipelineGeneration
   image: 
     name: "$IMAGE_TAG"
-    entrypoint: [$IMAGE_ENTRYPOINT]
   variables:
     WORKSPACE_PATH_KEY: CI_PROJECT_DIR
     CI_UTIL: "${SUPPORT_PACKAGE_ROOT}/toolbox/padv/pipeline_generator/ci"
