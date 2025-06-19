@@ -34,6 +34,7 @@ variables:
   PROJECT_NAME: "${CI_PIPELINE_NAME}"
   # IMAGE_TAG: padv:R2024b_j2959559_73v2
   IMAGE_TAG: package-non-interactive:r2024b_apr
+  IMAGE_ENTRYPOINT: ""
   # SUBMODULES_MODE: true
   MLM_LICENSE_TOKEN: "$MLM_LICENSE_TOKEN_SECRET"
   PROJECT_RELATIVE_PATH: "level1-a/level2/ProcessAdvisorProjectReferenceExample"      # or "."
@@ -41,6 +42,7 @@ SimulinkPipelineGeneration:
   stage: SimulinkPipelineGeneration
   image: 
     name: "$IMAGE_TAG"
+    entrypoint: "$IMAGE_ENTRYPOINT"
   variables:
     WORKSPACE_PATH_KEY: CI_PROJECT_DIR
     CI_UTIL: "${SUPPORT_PACKAGE_ROOT}/toolbox/padv/pipeline_generator/ci"
@@ -48,11 +50,10 @@ SimulinkPipelineGeneration:
     # GIT_SUBMODULE_STRATEGY: recursive
   tags: ["$RUNNER_LABEL"]
   script:
-    - sudo chown -R matlab:matlab $CI_BUILDS_DIR
     - cp -r "$CI_UTIL/templates/gitlab/_build_" "$PROJECT_RELATIVE_PATH/$BUILD_FOLDER_NAME"
     - cp -r "$CI_UTIL/scripts" ./_scripts_ && cd _scripts_
     - .\SET_PATH "$MATLAB_INSTALLATION_PATH" "$CI_PROJECT_DIR/_scripts_" 2>$RUNNER_TEMP_PROJECT_DIR\_error_ || source ./SET_PATH "$MATLAB_INSTALLATION_PATH" "$CI_PROJECT_DIR/_scripts_"
-    - matlab-batch "addpath('$CI_PROJECT_DIR/pipelines');generate_gitlab_pipeline('$CI_PROJECT_DIR','$PROJECT_RELATIVE_PATH','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
+    - xvfb-run matlab-batch "addpath('$CI_PROJECT_DIR/pipelines');generate_gitlab_pipeline('$CI_PROJECT_DIR','$PROJECT_RELATIVE_PATH','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
     # - xvfb-run -a matlab -batch "addpath('$CI_PROJECT_DIR');generate_gitlab_pipeline('$CI_PROJECT_DIR','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
     # - xvfb-run matlab-batch "addpath('$CI_PROJECT_DIR');generate_gitlab_pipeline('$CI_PROJECT_DIR','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
     - call "$PYTHON_ALIAS" "$CI_UTIL/py/prepare.py" --pipeline_prepare --platform gitlab
