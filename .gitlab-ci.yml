@@ -8,13 +8,14 @@ stages:
 variables:
   PYTHON_ALIAS: python3
   # SUPPORT_PACKAGE_ROOT: "D:/sb/r24b_0402/matlab"
-  SUPPORT_PACKAGE_ROOT: "C:/Data/nrepos/bslcicd/matlab"
+  # SUPPORT_PACKAGE_ROOT: "C:/Data/nrepos/bslcicd/matlab"
   # SUPPORT_PACKAGE_ROOT: "/mathworks/devel/sbs/70/ahmedh.BR2024bd.j2959559.73/matlab"
   # SUPPORT_PACKAGE_ROOT: "/home/matlab/Documents/MATLAB/SupportPackages/R2024b"
+  SUPPORT_PACKAGE_ROOT: "/opt/packages"
   # MATLAB_INSTALLATION_PATH: "D:/sb/r24b_0402/matlab/bin"  # Path to MATLAB installation directory
-  MATLAB_INSTALLATION_PATH: "C:/Program Files/MATLAB/R2024b/bin"  # Path to MATLAB installation directory
+  # MATLAB_INSTALLATION_PATH: "C:/Program Files/MATLAB/R2024b/bin"  # Path to MATLAB installation directory
   # MATLAB_INSTALLATION_PATH: "/mathworks/devel/sbs/70/ahmedh.BR2024bd.j2959559.73/matlab/bin"
-  # MATLAB_INSTALLATION_PATH: "/matlab_bin_path"
+  MATLAB_INSTALLATION_PATH: "matlab_bin_path"
   ARTIFACT_SERVICE_MODE: azure_blob         # jfrog/network/s3/azure_blob
   # NETWORK_STORAGE_PATH: C:/Data/artifactory
   # ARTIFACTORY_URL: http://mathworks-v4rgb:8082/artifactory
@@ -29,7 +30,7 @@ variables:
   # For Azure blob storage, you need to set Azure storage account connectionstring in Azure Devops variables with 'AZ_CONNECTION_STRING_SECRET' id; you should never hardcode secrets or token in the YAML file.
   AZ_CONNECTION_STRING: "$AZ_CONNECTION_STRING_SECRET"
   # RUNNER_LABEL: padv_win_runner
-  RUNNER_LABEL: padv_linux_agents
+  RUNNER_LABEL: padv_win_agents
   BUILD_FOLDER_NAME: _build_
   PROJECT_NAME: "${CI_PIPELINE_NAME}"
   # IMAGE_TAG: padv:R2024b_j2959559_73v2
