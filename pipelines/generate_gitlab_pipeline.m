@@ -19,6 +19,7 @@ function generate_gitlab_pipeline(workspace, projectToRepoPath, matlabInstallati
     op.StopOnStageFailure = true;
     op.RunprocessCommandOptions.GenerateJUnitForProcess = true;
     op.ReportPath = "$PROJECTROOT$/PA_Results/Report/PadvReport";
+    op.ReportFormat = "html";
     op.ProjectToRepoPath = projectToRepoPath;
 
     % Docker image settings
