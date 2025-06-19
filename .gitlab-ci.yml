@@ -33,6 +33,7 @@ variables:
   BUILD_FOLDER_NAME: _build_
   PROJECT_NAME: "${CI_PIPELINE_NAME}"
   # IMAGE_TAG: padv:R2024b_j2959559_73v2
+  IMAGE_TAG: package-non-interactive:r2024b_apr
   # SUBMODULES_MODE: true
   MLM_LICENSE_TOKEN: "$MLM_LICENSE_TOKEN_SECRET"
   PROJECT_RELATIVE_PATH: "level1-a/level2/ProcessAdvisorProjectReferenceExample"      # or "."
