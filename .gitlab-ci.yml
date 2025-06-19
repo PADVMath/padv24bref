@@ -42,7 +42,7 @@ SimulinkPipelineGeneration:
   stage: SimulinkPipelineGeneration
   image: 
     name: "$IMAGE_TAG"
-    entrypoint: ["${IMAGE_ENTRYPOINT}"]
+    entrypoint: [$IMAGE_ENTRYPOINT]
   variables:
     WORKSPACE_PATH_KEY: CI_PROJECT_DIR
     CI_UTIL: "${SUPPORT_PACKAGE_ROOT}/toolbox/padv/pipeline_generator/ci"
