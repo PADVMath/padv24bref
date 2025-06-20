@@ -39,6 +39,7 @@ variables:
   # SUBMODULES_MODE: true
   MLM_LICENSE_TOKEN: "$MLM_LICENSE_TOKEN_SECRET"
   PROJECT_RELATIVE_PATH: "level1-a/level2/ProcessAdvisorProjectReferenceExample/"      # "" or "level1-a/level2/ProcessAdvisorProjectReferenceExample/"
+  BUILD_FOLDER: "$PROJECT_RELATIVE_PATH$BUILD_FOLDER_NAME"
 SimulinkPipelineGeneration:
   stage: SimulinkPipelineGeneration
   image: 
@@ -50,7 +51,7 @@ SimulinkPipelineGeneration:
     # GIT_SUBMODULE_STRATEGY: recursive
   tags: ["$RUNNER_LABEL"]
   script:
-    - cp -r "$CI_UTIL/templates/gitlab/_build_" "$PROJECT_RELATIVE_PATH$BUILD_FOLDER_NAME"
+    - cp -r "$CI_UTIL/templates/gitlab/_build_" "$BUILD_FOLDER"
     - cp -r "$CI_UTIL/scripts" ./_scripts_ && cd _scripts_
     - .\SET_PATH "$MATLAB_INSTALLATION_PATH" "$CI_PROJECT_DIR/_scripts_" 2>$RUNNER_TEMP_PROJECT_DIR\_error_ || source ./SET_PATH "$MATLAB_INSTALLATION_PATH" "$CI_PROJECT_DIR/_scripts_"
     - xvfb-run matlab-batch "addpath('$CI_PROJECT_DIR/pipelines');generate_gitlab_pipeline('$CI_PROJECT_DIR','$PROJECT_RELATIVE_PATH','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
@@ -58,14 +59,14 @@ SimulinkPipelineGeneration:
     # - xvfb-run matlab-batch "addpath('$CI_PROJECT_DIR');generate_gitlab_pipeline('$CI_PROJECT_DIR','$MATLAB_INSTALLATION_PATH','$RUNNER_LABEL','$BUILD_FOLDER_NAME');"
     - call "$PYTHON_ALIAS" "$CI_UTIL/py/prepare.py" --pipeline_prepare --platform gitlab
   artifacts:
-    paths: ["$PROJECT_RELATIVE_PATH$BUILD_FOLDER_NAME/"]
+    paths: ["$BUILD_FOLDER/"]
 
 SimulinkPipelineExecution:
   stage: SimulinkPipelineExecution
   needs: [SimulinkPipelineGeneration]
   trigger:
     include:
-      - artifact: $PROJECT_RELATIVE_PATH$BUILD_FOLDER_NAME/simulink_pipeline.yml
+      - artifact: $BUILD_FOLDER/simulink_pipeline.yml
         job: SimulinkPipelineGeneration
     strategy: depend
   # Do not change the name of these variables, they are used to identify the root pipeline ID in the downstream jobs.
