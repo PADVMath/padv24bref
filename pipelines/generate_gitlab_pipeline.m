@@ -25,7 +25,7 @@ function generate_gitlab_pipeline(workspace, projectToRepoPath, matlabInstallati
     % Docker image settings
     % examples: "matlab", "matlab-batch", "xvfb-run -a matlab", "xvfb-run -a matlab-batch"
     % op.MatlabLaunchCmd = "xvfb-run -a matlab-batch";
-    op.MatlabLaunchCmd = "matlab-batch";
+    op.MatlabLaunchCmd = "xvfb-run matlab-batch";
     op.MatlabStartupOptions = "";
     op.AddBatchStartupOption = false;
     padv.pipeline.generatePipeline(op, "CIPipeline");
