@@ -28,7 +28,7 @@ function processmodel(pm)
     includeTopProveCodeQuality = false && ~padv.internal.util.isMACA64 && (~isempty(ver('pscodeprover')) || ~isempty(ver('pscodeproverserver')));% Project Level Top-Model code proving
     includeRefCodeInspection = false;
     includeTopCodeInspection = false;
-    includeGenerateRequirementsReport = true;
+    includeGenerateRequirementsReport = false;
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Define Shared Path Variables
