@@ -10,8 +10,8 @@ variables:
   # SUPPORT_PACKAGE_ROOT: "D:/sb/r24b_0402/matlab"
   # SUPPORT_PACKAGE_ROOT: "C:/Data/nrepos/bslcicd/matlab"
   # SUPPORT_PACKAGE_ROOT: "/mathworks/devel/sbs/70/ahmedh.BR2024bd.j2959559.73/matlab"
-  # SUPPORT_PACKAGE_ROOT: "/home/matlab/Documents/MATLAB/SupportPackages/R2024b"
-  SUPPORT_PACKAGE_ROOT: "/opt/packages"
+  SUPPORT_PACKAGE_ROOT: "/home/matlab/Documents/MATLAB/SupportPackages/R2024b"
+  # SUPPORT_PACKAGE_ROOT: "/opt/packages"
   # MATLAB_INSTALLATION_PATH: "D:/sb/r24b_0402/matlab/bin"  # Path to MATLAB installation directory
   # MATLAB_INSTALLATION_PATH: "C:/Program Files/MATLAB/R2024b/bin"  # Path to MATLAB installation directory
   # MATLAB_INSTALLATION_PATH: "/mathworks/devel/sbs/70/ahmedh.BR2024bd.j2959559.73/matlab/bin"
