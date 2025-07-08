@@ -1,14 +1,14 @@
 % Copyright 2025 The MathWorks, Inc.
 
-function generate_gitlab_pipeline(workspace, projectToRepoPath, matlabInstallationLocation, runnerTags, build_folder)
+function generate_gitlab_pipeline(workspace, projectRelativePath, matlabInstallationLocation, runnerTags, build_folder)
     arguments
         workspace = pwd;
-        projectToRepoPath = "";
+        projectRelativePath = "";
         matlabInstallationLocation = "matlab_bin_path";
         runnerTags = "gitlab_runner_tag";
         build_folder = "_build_"
     end
-    cp = openProject(strjoin({workspace,projectToRepoPath} , filesep));
+    cp = openProject(strjoin({workspace,projectRelativePath} , filesep));
     op = padv.pipeline.GitLabOptions;
     % op.PipelineArchitecture = "IndependentModelPipelines"; # SingleStage, SerialStages, SerialStagesGroupPerTask
     op.PipelineArchitecture = "IndependentModelPipelines";
@@ -20,7 +20,7 @@ function generate_gitlab_pipeline(workspace, projectToRepoPath, matlabInstallati
     op.RunprocessCommandOptions.GenerateJUnitForProcess = true;
     op.ReportPath = "$PROJECTROOT$/PA_Results/Report/PadvReport";
     op.ReportFormat = "html";
-    op.ProjectToRepoPath = projectToRepoPath;
+    op.ProjectRelativePath = projectRelativePath;
 
     % Docker image settings
     % examples: "matlab", "matlab-batch", "xvfb-run -a matlab", "xvfb-run -a matlab-batch"

@@ -1,14 +1,14 @@
 % Copyright 2025 The MathWorks, Inc.
 
-function generate_jenkins_pipeline(workspace, projectToRepoPath, matlabInstallationLocation, agentLabel, build_folder)
+function generate_jenkins_pipeline(workspace, projectRelativePath, matlabInstallationLocation, agentLabel, build_folder)
     arguments
         workspace = pwd;
-        projectToRepoPath = "";
+        projectRelativePath = "";
         matlabInstallationLocation = "matlab_bin_path";
         agentLabel = "jenkins_agent_label";
         build_folder = "_build_"
     end
-    cp = openProject(strjoin({workspace,projectToRepoPath} , filesep));
+    cp = openProject(strjoin({workspace,projectRelativePath} , filesep));
     op = padv.pipeline.JenkinsOptions;
     % op.PipelineArchitecture = "IndependentModelPipelines"; # SingleStage, SerialStages, SerialStagesGroupPerTask
     op.PipelineArchitecture = "IndependentModelPipelines";
@@ -19,7 +19,7 @@ function generate_jenkins_pipeline(workspace, projectToRepoPath, matlabInstallat
     op.StopOnStageFailure = true;
     op.RunprocessCommandOptions.GenerateJUnitForProcess = true;
     op.ReportPath = "$PROJECTROOT$/PA_Results/Report/PadvReport";
-    op.ProjectToRepoPath = projectToRepoPath;
+    op.ProjectRelativePath = projectRelativePath;
 
     % Docker image settings
     op.UseMatlabPlugin = false;
