@@ -1,6 +1,7 @@
 node("padv_win_agents"){
     env.PYTHON_ALIAS = 'python3';
-    env.SUPPORT_PACKAGE_ROOT = 'C:/Data/nrepos/bslcicd/matlab';
+    env.SUPPORT_PACKAGE_ROOT = 'C:/ProgramData/MATLAB/SupportPackages/R2024b';
+    // env.SUPPORT_PACKAGE_ROOT = 'C:/Data/nrepos/bslcicd/matlab';
     // env.SUPPORT_PACKAGE_ROOT = '/mathworks/devel/sbs/70/ahmedh.BR2024bd.j2959559.117/matlab';
     env.MATLAB_INSTALLATION_PATH = 'C:/Program Files/MATLAB/R2024b/bin';
     // env.MATLAB_INSTALLATION_PATH = '/mathworks/devel/sbs/70/ahmedh.BR2024bd.j2959559.117/matlab/bin';
@@ -38,8 +39,8 @@ node("padv_win_agents"){
     // env.IMAGE_ARGS = "-u 40000:40000";
     env.BUILD_FOLDER_NAME = "_build_";
     env.IS_UNIX = isUnix();
-    env.PROJECT_RELATIVE_PATH = "level1-a/level2/ProcessAdvisorProjectReferenceExample";
-    env.BUILD_FOLDER = env.PROJECT_RELATIVE_PATH ? "${env.PROJECT_RELATIVE_PATH}/${env.BUILD_FOLDER_NAME}" : env.BUILD_FOLDER_NAME;
+    env.PROJECT_RELATIVE_PATH = "level1-a/level2/ProcessAdvisorProjectReferenceExample/";
+    env.BUILD_FOLDER = "${env.PROJECT_RELATIVE_PATH}${env.BUILD_FOLDER_NAME}";
 
     stage('Pipeline Generation'){
         cleanWs();def scmVars=checkout scm;env.PADV_GIT_COMMIT=scmVars.GIT_COMMIT;
