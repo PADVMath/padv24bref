@@ -1,5 +1,5 @@
 // Copyright 2025 The MathWorks, Inc.
-node('padv_wsl_agents'){
+node('JenkinsAgentMatlabUser'){
     // For online configuration guide visit: https://www.mathworks.com/help/slcheck/padv/ug/integrate-process-into-jenkins-with-artifact-management.html
     // env.MW_SUPPORT_PACKAGE_ROOT = 'D:/sb/Bslcicd_0515/matlab';
     env.MW_SUPPORT_PACKAGE_ROOT = '/home/matlab/Documents/MATLAB/SupportPackages/R2024b';
