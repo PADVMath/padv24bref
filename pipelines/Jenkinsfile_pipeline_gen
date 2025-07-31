@@ -33,7 +33,7 @@ node('padv_wsl_agents'){
             def pipelineUtils = load "$WORKSPACE/MW_PipelineUtils.groovy";
 
             // Generating Process Advisor's process pipeline
-            pipelineUtils.runShellCommand("matlab-batch \"addpath('$WORKSPACE/pipelines');generate_jenkins_pipeline2();\"", isUnixEnvironment);
+            pipelineUtils.runShellCommand("matlab-batch \"addpath('$WORKSPACE/pipelines');generate_jenkins_pipeline();\"", isUnixEnvironment);
             stash(includes:"${pipelineGenerationPath}/**", name:'pipeline_generated_files');
             archiveArtifacts artifacts: "${pipelineGenerationPath}/**", allowEmptyArchive: true
             pipelineUtils.loadEnvVariables(isUnixEnvironment, scmVars.GIT_COMMIT);
