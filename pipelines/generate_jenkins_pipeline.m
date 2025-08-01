@@ -28,7 +28,7 @@ function generate_jenkins_pipeline2( )
     % op.S3AwsAcessKeyID = '<AWS S3 access key id>';
     op.AzContainerName = 'padvcontainer';
     op.RunnerType = "container";        % default/container
-    op.ImageTag = 'slcicd.azurecr.io/slcheck/padv-ci:r2024b_apr25t_ci_spkg20250730';
+    op.ImageTag = 'slcicd.azurecr.io/slcheck/padv-ci:r2024b_apr25t_ci_spkg20250801'; %'slcicd.azurecr.io/slcheck/padv-ci:r2024b_apr25t_ci_spkg20250730';
     % op.ImageArgs = "<Docker container arguments>";
     
     % Docker image settings
