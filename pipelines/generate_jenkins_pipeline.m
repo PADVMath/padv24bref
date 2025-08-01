@@ -12,7 +12,7 @@ function generate_jenkins_pipeline2( )
     op.PipelineArchitecture = "IndependentModelPipelines";
     op.GeneratorVersion = 2;
     op.SupportPackageRoot = supportPackageRoot;
-    op.AgentLabel = "padv_wsl_agents";
+    op.AgentLabel = "JenkinsAgentMatlabUser";
     op.GeneratedPipelineDirectory = pipelineGenDirectory;
     op.StopOnStageFailure = true;
     op.RunprocessCommandOptions.GenerateJUnitForProcess = true;
