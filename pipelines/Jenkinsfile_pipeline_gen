@@ -25,7 +25,7 @@ node('JenkinsAgentMatlabUser'){
     def pipelineGenerationPath = "${env.MW_RELATIVE_PROJECT_PATH}${env.MW_PIPELINE_GEN_DIRECTORY}";
     stage('Pipeline Generation'){
         cleanWs();def scmVars=checkout scm;
-        docker.image("slcicd.azurecr.io/slcheck/padv-ci:r2024b_apr25t_ci_spkg20250730").inside(){
+        docker.image("slcicd.azurecr.io/slcheck/padv-ci:r2024b_apr25t_ci_spkg20250801").inside(){
             // Loading pipeline utilities script
             def command = "cp -r $MW_SUPPORT_PACKAGE_ROOT/toolbox/padv/pipeline_generator/ci/templates/jenkins/MW_PipelineUtils.groovy $WORKSPACE";
             def isUnixEnvironment = isUnix();
