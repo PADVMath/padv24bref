@@ -9,7 +9,7 @@ function generate_jenkins_pipeline2( )
     cp = openProject(strcat(workspace,filesep,string(relativeProjectPath)));
     op = padv.pipeline.JenkinsOptions;
     % op.PipelineArchitecture = "IndependentModelPipelines"; # SingleStage, SerialStages, SerialStagesGroupPerTask
-    op.PipelineArchitecture = "IndependentModelPipelines";
+    op.PipelineArchitecture = "SingleStage";
     op.GeneratorVersion = 2;
     op.SupportPackageRoot = supportPackageRoot;
     op.AgentLabel = "JenkinsAgentMatlabUser";
