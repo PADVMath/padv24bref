@@ -1,27 +1,28 @@
 // Copyright 2025 The MathWorks, Inc.
 node('JenkinsAgentMatlabUser'){
-    // For online configuration guide visit: https://www.mathworks.com/help/slcheck/padv/ug/integrate-process-into-jenkins-with-artifact-management.html
-    // env.MW_SUPPORT_PACKAGE_ROOT = 'D:/sb/Bslcicd_0515/matlab';
+    // For the online configuration guide visit: https://www.mathworks.com/help/slcheck/padv/ug/integrate-process-into-jenkins-with-artifact-management.html
     env.MW_SUPPORT_PACKAGE_ROOT = '/home/matlab/Documents/MATLAB/SupportPackages/R2024b';
     env.MW_RELATIVE_PROJECT_PATH = "level1-a/level2/ProcessAdvisorProjectReferenceExample/";  // e.g. "" or "relative/path/to/project/"
+    env.MW_REMOTE_BUILD_CACHE_NAME = "Jenkins_Project1"; 
     env.MW_PIPELINE_GEN_DIRECTORY = "_pipelineGen_";
-    // For JFrog Artifactory storage services, You need to set the JFrog API token in Jenkins credentials with 'MW_SECRET_ARTIFACTORY_API_TOKEN_SECRET' ID; you should never hardcode secrets or token in the jenkins file.
-    // withCredentials([string( credentialsId: 'MW_SECRET_ARTIFACTORY_API_TOKEN_SECRET',variable: 'artifactory_api_token')]) {
-    //     env.MW_SECRET_ARTIFACTORY_API_TOKEN = artifactory_api_token;
+    // Note: You should never hardcode secrets or tokens in the Jenkinsfile.
+    // For JFrog Artifactory storage services, You need to set the JFrog API token in Jenkins credentials with 'ARTIFACTORY_API_TOKEN_SECRET' ID.
+    // withCredentials([string( credentialsId: 'ARTIFACTORY_API_TOKEN_SECRET',variable: 'artifactory_api_token')]) {
+    //     env.ARTIFACTORY_API_TOKEN = artifactory_api_token;
     // }
-    // For S3 storage services, you need to set AWS S3 access key in Jenkins credentials with 'MW_SECRET_S3_AWS_SECRET_ACCESS_KEY_SECRET' ID; you should never hardcode secrets or token in the jenkins file.
-    // withCredentials([string( credentialsId: 'MW_SECRET_S3_AWS_SECRET_ACCESS_KEY_SECRET',variable: 's3_access_key')]) {
-    //     env.MW_SECRET_S3_AWS_SECRET_ACCESS_KEY = s3_access_key;
+    // For S3 storage services, you need to set AWS S3 access key in Jenkins credentials with 'S3_AWS_SECRET_ACCESS_KEY_SECRET' ID.
+    // withCredentials([string( credentialsId: 'S3_AWS_SECRET_ACCESS_KEY_SECRET',variable: 's3_access_key')]) {
+    //     env.S3_AWS_SECRET_ACCESS_KEY = s3_access_key;
     // }
-    // For Azure Blob storage services, you need to set the Azure storage account connection string in Jenkins credentials with the 'MW_SECRET_AZ_CONNECTION_STRING_SECRET' ID. You should never hardcode secrets or tokens in the YAML file.
-    withCredentials([string( credentialsId: 'MW_SECRET_AZ_CONNECTION_STRING_SECRET',variable: 'az_connection_string')]) {
-        env.MW_SECRET_AZ_CONNECTION_STRING = az_connection_string;
+    // For Azure Blob storage services, you need to set the Azure storage account connection string in Jenkins credentials with the 'AZ_CONNECTION_STRING_SECRET' ID.
+    withCredentials([string( credentialsId: 'AZ_CONNECTION_STRING_SECRET',variable: 'az_connection_string')]) {
+        env.AZ_CONNECTION_STRING = az_connection_string;
     }
-
+    
     withCredentials([string( credentialsId: 'MLM_LICENSE_TOKEN_SECRET',variable: 'mlm_license_token')]) {
         env.MLM_LICENSE_TOKEN = mlm_license_token;
     }
-    
+
     def pipelineGenerationPath = "${env.MW_RELATIVE_PROJECT_PATH}${env.MW_PIPELINE_GEN_DIRECTORY}";
     stage('Pipeline Generation'){
         cleanWs();def scmVars=checkout scm;
