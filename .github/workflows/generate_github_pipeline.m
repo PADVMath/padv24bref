@@ -1,30 +1,35 @@
 % Copyright 2025 The MathWorks, Inc.
 
-function generate_github_pipeline(workspace, projectRelativePath, matlabInstallationLocation, runnerLabels, build_folder)
-    arguments
-        workspace = pwd;
-        projectRelativePath = "";
-        matlabInstallationLocation = "matlab_bin_path";
-        runnerLabels = "padvRunnerGithubPub"; %"padv24brefNewRunner";
-        build_folder = "_build_"
-    end
-    cp = openProject(strcat(workspace,filesep,projectRelativePath));
+function generate_github_pipeline()
+    cp = openProject(strcat(workspace,filesep,string(relativeProjectPath)));
     op = padv.pipeline.GitHubOptions;
     op.PipelineArchitecture = "IndependentModelPipelines";
     op.GeneratorVersion = 2;
-    op.MatlabInstallationLocation = "C:\Program Files\MATLAB\R2024b\bin";     % "C:/Program Files/MATLAB/R2024b/bin";
-    op.RunnerLabels = runnerLabels;                                 % "padv_win_agents";
-    op.GeneratedPipelineDirectory = build_folder;                   % "_build_";
+    op.SupportPackageRoot = "/home/matlab/Documents/MATLAB/SupportPackages/R2024b";
+    op.RunnerLabels = "padvRunnerGithubPub";
+    op.GeneratedPipelineDirectory = "_pipelineGen_";
     op.StopOnStageFailure = true;
     op.RunprocessCommandOptions.GenerateJUnitForProcess = true;
-    op.ReportPath = "$PROJECTROOT$/PA_Results/Report/PadvReport";
-    op.ProjectRelativePath = projectRelativePath;                       % "" or "level1-a/level2/ProcessAdvisorProjectReferenceExample/"
+    op.ReportPath = "$PROJECTROOT$/PA_Results/Report/ProcessAdvisorReport";
+    op.RelativeProjectPath = "level1-a/level2/ProcessAdvisorProjectReferenceExample/";
+    op.RemoteBuildCacheName = "GitHub_Project1";
+
+    % We can enhance the vaidation now of the options on the matlab side
+    op.ArtifactServiceMode = 'azure_blob';         % network/jfrog/s3/azure_blob
+    % op.NetworkStoragePath = '<Artifactory network storage path>';
+    % op.ArtifactoryUrl = '<JFrog artifactory url>';
+    % op.ArtifactoryRepoName = '<JFrog artifactory repo name>';
+    % op.S3BucketName = '<AWS S3 bucket name>';
+    % op.S3AwsAcessKeyID = '<AWS S3 access key id>';
+    op.AzContainerName = 'padvcontainer';
+    op.RunnerType = "container";        % default/container
+    op.ImageTag = 'slcicd.azurecr.io/slcheck/padv-ci:r2024b_apr25t_ci_spkg20250803';
     
     % Docker image settings
     op.UseMatlabPlugin = false;
-    % examples: "matlab", "matlab-batch", "xvfb-run -a matlab", "xvfb-run -a matlab-batch"
     op.MatlabLaunchCmd = "xvfb-run -a matlab-batch";
     op.MatlabStartupOptions = "";
     op.AddBatchStartupOption = false;
+    
     padv.pipeline.generatePipeline(op, "CIPipeline");
 end

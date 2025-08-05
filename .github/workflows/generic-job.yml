@@ -1,5 +1,3 @@
-# Copyright 2025 The MathWorks, Inc.
-
 name: Reusable Workflow - Generic Job
 on:
   workflow_dispatch:
@@ -8,71 +6,47 @@ on:
       job-name:
         required: true
         type: string
-      
 jobs:
   Generic-Job:
     name: Generic Job
-    runs-on: ${{ vars.RUNNER_LABEL }}
+    runs-on: 'padv24brefNewRunner' 
     container:
-      image: ${{ vars.IMAGE_TAG }}  
-    env:
+      image: 'slcicd.azurecr.io/slcheck/padv-ci:r2024b_apr25t_ci_spkg20250803'
+    env: 
       HOME: /home/matlab
-      PYTHON_ALIAS: ${{ vars.PYTHON_ALIAS || 'python' }}
-      SUBMODULES_MODE: ${{ vars.SUBMODULES_MODE || 'false' }}
-      WORKSPACE_PATH_KEY: GITHUB_WORKSPACE
-      WORKSPACE_TEMP_PATH_KEY: RUNNER_TEMP
-      BUILD_FOLDER_NAME: ${{ vars.BUILD_FOLDER_NAME || '_build_' }}
-      PROJECT_RELATIVE_PATH: ${{ vars.PROJECT_RELATIVE_PATH || '' }}
-      SUPPORT_PACKAGE_ROOT: ${{ vars.SUPPORT_PACKAGE_ROOT }}
-      CI_UTIL: "${{ vars.SUPPORT_PACKAGE_ROOT }}/toolbox/padv/pipeline_generator/ci"
-      ARTIFACT_SERVICE_MODE: ${{ vars.ARTIFACT_SERVICE_MODE || 'network' }}
-      NETWORK_STORAGE_PATH: ${{ vars.NETWORK_STORAGE_PATH }}
-      ARTIFACTORY_URL: ${{ vars.ARTIFACTORY_URL }}
-      ARTIFACTORY_REPO_NAME: ${{ vars.ARTIFACTORY_REPO_NAME }}
+      MW_SUPPORT_PACKAGE_ROOT: '/home/matlab/Documents/MATLAB/SupportPackages/R2024b' 
+      MW_RELATIVE_PROJECT_PATH: 'level1-a/level2/ProcessAdvisorProjectReferenceExample/' 
+      MW_REMOTE_BUILD_CACHE_NAME: GitHub_Project1  
+      MW_PIPELINE_GEN_DIRECTORY: '_pipelineGen_' 
+      _MW_PIPELINE_WORKSPACE_PATH_KEY: GITHUB_WORKSPACE
+      _MW_PIPELINE_WORKSPACE_TEMP_PATH_KEY: RUNNER_TEMP
+      MW_PIPELINE_UTIL_PATH: '/home/matlab/Documents/MATLAB/SupportPackages/R2024b/toolbox/padv/pipeline_generator/ci'
       ARTIFACTORY_API_TOKEN: ${{ secrets.ARTIFACTORY_API_TOKEN_SECRET }}
-      S3_BUCKET_NAME: ${{ vars.S3_BUCKET_NAME }}
-      S3_AWS_ACCESS_KEY_ID: ${{ vars.S3_AWS_ACCESS_KEY_ID }}
       S3_AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_AWS_SECRET_ACCESS_KEY_SECRET }}
-      AZ_CONTAINER_NAME: ${{ vars.AZ_CONTAINER_NAME }}
       AZ_CONNECTION_STRING: ${{ secrets.AZ_CONNECTION_STRING_SECRET }}
       MLM_LICENSE_TOKEN: ${{ secrets.MLM_LICENSE_TOKEN_SECRET }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          submodules: ${{ env.SUBMODULES_MODE }}
           fetch-depth: 0
-
-      - name: Download build files
+      - name: Download workflow generated files
         uses: actions/download-artifact@v4
         with:
-          name: build_files
-          path: ${{env.PROJECT_RELATIVE_PATH}}${{env.BUILD_FOLDER_NAME}}
-
+          name: workflow_generated_files
+          path: ${{env.MW_RELATIVE_PROJECT_PATH}}${{env.MW_PIPELINE_GEN_DIRECTORY}}
       - name: Load environment variables
-        run: "${{ env.PYTHON_ALIAS }} ${{ env.CI_UTIL }}/py/prepare.py --clean_temp_build_area --jobname \"${{ inputs.job-name }}\" --pipeline_prepare --platform github"
-
+        run: "python3 ${{ env.MW_PIPELINE_UTIL_PATH }}/py/prepare.py --clean_temp_gen_area --jobname \"${{ inputs.job-name }}\" --pipeline_prepare --platform github" 
       - name: Download Artifacts
-        run: "${{ env.PYTHON_ALIAS }} ${{ env.CI_UTIL }}/py/job_download.py --jobname \"${{ inputs.job-name }}\""
-
+        run: "python3 ${{ env.MW_PIPELINE_UTIL_PATH }}/py/job_download.py --jobname \"${{ inputs.job-name }}\"" 
       - name: Execute Job Tasks
-        if: ${{ (env.ENABLE_CI_DRYRUN == 'true') || (env.USE_MATLAB_PLUGIN != 'true') }}
-        run: "${{ env.TEMP_BUILD_AREA }}/shell_commands"
-        
-      # - name: Execute Job Tasks using MATLAB plugin
-      #   if: ${{ (env.ENABLE_CI_DRYRUN != 'true') && (env.USE_MATLAB_PLUGIN == 'true') }}
-      #   uses: matlab-actions/run-command@v2
-      #   with:
-      #     command: "addpath('${{ env.TEMP_BUILD_AREA }}');matlab_job_commands"
-
+        run: "$RUNNER_TEMP/${{ env._MW_PIPELINE_CONST_TEMP_GEN_DIRECTORY }}/shell_commands" 
       - name: Upload Job Artifacts
-        run: "${{ env.PYTHON_ALIAS }} ${{ env.CI_UTIL }}/py/job_delta_upload.py --jobname \"${{ inputs.job-name }}\" --job_status \"${{ job.status }}\" --skip_compression"
+        run: "python3 ${{ env.MW_PIPELINE_UTIL_PATH }}/py/job_delta_upload.py --jobname \"${{ inputs.job-name }}\" --job_status \"${{ job.status }}\" --skip_compression" 
         if: always() && !cancelled()
-      
       - name: Upload Pipeline Artifacts
-        if: ${{ always() && !cancelled() && env.IS_COLLECTING_ARTIFACTS == 'true' }}
+        if: ${{ always() && !cancelled() && env._MW_PIPELINE_JOB_IS_COLLECTING_ARTIFACTS == 'true' }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACTS_FILE_NAME_STEM }}
-          path: ${{ env.ARTIFACTS_FILE_NAME_STEM }}/
+          name: ${{ env._MW_PIPELINE_OPTIONS_ARTIFACTS_FILE_NAME_STEM }}
+          path: ${{ env._MW_PIPELINE_OPTIONS_ARTIFACTS_FILE_NAME_STEM }}/

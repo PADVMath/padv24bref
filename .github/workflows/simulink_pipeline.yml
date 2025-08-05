@@ -1,12 +1,5 @@
-# Make sure to configure the following variables as repository variables and update the tokens below:
-#   RUNNER_LABEL, PYTHON_ALIAS, SUPPORT_PACKAGE_ROOT, NETWORK_STORAGE_PATH
-# To enable JFrog Artifactory storage services, you need to configure the following variables as repository variables:
-#   ARTIFACT_SERVICE_MODE, ARTIFACTORY_URL, ARTIFACTORY_REPO_NAME, ARTIFACTORY_API_TOKEN_SECRET 
-# To enable AWS S3 storage services, you need to configure the following variables as repository variables:
-#   ARTIFACT_SERVICE_MODE, S3_BUCKET_NAME, S3_AWS_ACCESS_KEY_ID, S3_AWS_SECRET_ACCESS_KEY_SECRET
-# To enable Azure Blob storage services, you need to configure the following variables as repository variables:
-#   ARTIFACT_SERVICE_MODE, AZ_CONTAINER_NAME, AZ_CONNECTION_STRING_SECRET
-name: GitHub MATLAB Workflow - PADV24bRef
+
+name: GitHub MATLAB Workflow
 on: # You must define at least one trigger for each workflow.
   workflow_dispatch:  # Set manual triggers as an optional trigger.
   pull_request:       # Set pull_request as an automatic trigger. 
@@ -16,32 +9,34 @@ on: # You must define at least one trigger for each workflow.
     # synchronize: This triggers the workflow when new commits are pushed to a pull request branch. This includes any time the pull request's head branch is updated with new commits.
     # reopened: This triggers the workflow when a previously closed pull request is reopened
     types: [opened, synchronize, reopened]
-    
+env:
+  MW_SUPPORT_PACKAGE_ROOT: '/home/matlab/Documents/MATLAB/SupportPackages/R2024b'
+  MW_RELATIVE_PROJECT_PATH: 'level1-a/level2/ProcessAdvisorProjectReferenceExample/'
+  MW_PIPELINE_GEN_DIRECTORY: "_pipelineGen_" 
+  # Note: You should never hardcode secrets or tokens in the YAML file.
+  # For JFrog Artifactory storage services, you need to set the JFrog API token in GitHub repository secerts with the 'ARTIFACTORY_API_TOKEN_SECRET' ID. 
+  # For S3 storage services, you need to set the AWS S3 access key in GitHub repository secerts with the 'S3_AWS_SECRET_ACCESS_KEY_SECRET' ID. 
+  # For Azure Blob storage services, you need to set the Azure storage account connection string in GitHub repository secerts with the 'AZ_CONNECTION_STRING_SECRET' ID. 
 jobs:
   build_files:
-    runs-on: ${{ vars.RUNNER_LABEL }}
+    runs-on: 'padv24brefNewRunner' 
     container:
-      image: ${{ vars.IMAGE_TAG }}
+      image: 'slcicd.azurecr.io/slcheck/padv-ci:r2024b_apr25t_ci_spkg20250803' 
     env:
       HOME: /home/matlab
-      BUILD_FOLDER_NAME: ${{ vars.BUILD_FOLDER_NAME || '_build_' }}
-      PROJECT_RELATIVE_PATH: ${{ vars.PROJECT_RELATIVE_PATH || '' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          submodules: ${{ vars.SUBMODULES_MODE || 'false' }}
-          fetch-depth: 0
-      - name: Copy build files
+      - name: Copy workflow files
         run: |
-          mkdir "${{env.PROJECT_RELATIVE_PATH}}${{env.BUILD_FOLDER_NAME}}" 
-          cp ".github/workflows/ir_dag.json" "${{env.PROJECT_RELATIVE_PATH}}${{env.BUILD_FOLDER_NAME}}/" 
-          cp ".github/workflows/simulink_pipeline.yml" "${{env.PROJECT_RELATIVE_PATH}}${{env.BUILD_FOLDER_NAME}}/" 
-      - name: Upload build files
+          mkdir "${{env.MW_RELATIVE_PROJECT_PATH}}${{env.MW_PIPELINE_GEN_DIRECTORY}}" 
+          cp ".github/workflows/ir_dag.json" "${{env.MW_RELATIVE_PROJECT_PATH}}${{env.MW_PIPELINE_GEN_DIRECTORY}}/" 
+          cp ".github/workflows/simulink_pipeline.yml" "${{env.MW_RELATIVE_PROJECT_PATH}}${{env.MW_PIPELINE_GEN_DIRECTORY}}/" 
+      - name: Upload workflow files
         uses: actions/upload-artifact@v4
         with:
-          name: build_files
-          path: ${{env.PROJECT_RELATIVE_PATH}}${{env.BUILD_FOLDER_NAME}}/
+          name: workflow_generated_files
+          path: ${{env.MW_RELATIVE_PROJECT_PATH}}${{env.MW_PIPELINE_GEN_DIRECTORY}}/
   
   start:
     needs: [build_files]
