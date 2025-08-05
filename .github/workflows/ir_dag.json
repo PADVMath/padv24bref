@@ -10,7 +10,7 @@
   "ReportOutputPath": "level1-a/level2/ProcessAdvisorProjectReferenceExample/PA_Results/Report",
   "HasNestedParallelBranches": false,
   "Options": {
-    "RunnerLabels": "padv24brefNewRunner",
+    "RunnerLabels": "padvRunnerGithubPub",
     "RetentionDays": "30",
     "GeneratedYMLFileName": "simulink_pipeline",
     "UseMatlabPlugin": false,
