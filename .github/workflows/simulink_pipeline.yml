@@ -19,7 +19,7 @@ env:
   # For Azure Blob storage services, you need to set the Azure storage account connection string in GitHub repository secerts with the 'AZ_CONNECTION_STRING_SECRET' ID. 
 jobs:
   build_files:
-    runs-on: 'padv24brefNewRunner' 
+    runs-on: 'padvRunnerGithubPub' 
     container:
       image: 'slcicd.azurecr.io/slcheck/padv-ci:r2024b_apr25t_ci_spkg20250803' 
     env:
