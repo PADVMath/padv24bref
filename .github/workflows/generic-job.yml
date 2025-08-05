@@ -9,7 +9,7 @@ on:
 jobs:
   Generic-Job:
     name: Generic Job
-    runs-on: 'padv24brefNewRunner' 
+    runs-on: 'padvRunnerGithubPub' 
     container:
       image: 'slcicd.azurecr.io/slcheck/padv-ci:r2024b_apr25t_ci_spkg20250803'
     env: 
